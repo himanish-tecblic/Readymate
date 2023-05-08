@@ -4,8 +4,10 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from .models import *
-from .serializers import *
+from .serializers import UserRegistrationSerializer
+from .serializers import UserLoginSerializer
 import requests
+from django.contrib.auth import authenticate
 
 # Create your views here.
 
@@ -14,10 +16,8 @@ import requests
 class UserRegistration(APIView):
 
     def post(self, request, *args, **kwargs):
-        print("----------------------------------")
         if request.data:
             data = request.data
-            # print("------------------------->>>>",data)
             try:
                 serializer = UserRegistrationSerializer(data=request.data)
                 print("----------->>>>", serializer)
@@ -50,3 +50,34 @@ class UserRegistration(APIView):
                 return Response({
                 "message": "Data not found"
             }, status=status.HTTP_400_BAD_REQUEST)
+                
+                
+class UserLoginWithEmail(APIView):
+    
+    def post(self, request, *ags, **kwargs):
+        serializer = UserLoginSerializer(data=request.data)
+        print("-------------->>>>>",serializer)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+            user = User.objects.filter(email=email)
+            if user:
+                print("------>>>user", user)
+                user_validate = authenticate(email=email, password=password)
+                print("-------------->>>>",user_validate)
+                if user_validate:
+                           response={
+                                "success": True,
+                                "message": "User logged in Successfully",
+                                "status": status.HTTP_201_CREATED,
+                                'user_id': user.id,
+                                "user_name": user.name,
+                                "user_phone": str(user.phone),
+                                "user_email": user.email,
+                            }
+                return Response(response, status=status.HTTP_201_CREATED)
+            # return Response( status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                        'message': "username or password does not match!! please enter correct credentials"
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                    
