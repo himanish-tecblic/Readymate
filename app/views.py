@@ -54,16 +54,16 @@ class UserRegistration(APIView):
                 
 class UserLoginWithEmail(APIView):
     
-    def post(self, request, *ags, **kwargs):
+    def get(self, request, *ags, **kwargs):
         serializer = UserLoginSerializer(data=request.data)
-        print("-------------->>>>>",serializer)
         if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
             user = User.objects.filter(email=email)
+            username = User.objects.get(email=email).name
+            print("--------------->>>>",username)
             if user:
-                print("------>>>user", user)
-                user_validate = authenticate(email=email, password=password)
+                user_validate = authenticate( username=username, password=password)
                 print("-------------->>>>",user_validate)
                 if user_validate:
                            response={
@@ -75,7 +75,7 @@ class UserLoginWithEmail(APIView):
                                 "user_phone": str(user.phone),
                                 "user_email": user.email,
                             }
-                return Response(response, status=status.HTTP_201_CREATED)
+                           return Response(response, status=status.HTTP_201_CREATED)
             # return Response( status=status.HTTP_400_BAD_REQUEST)
                 return Response({
                         'message': "username or password does not match!! please enter correct credentials"
