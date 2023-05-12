@@ -22,6 +22,8 @@ from app import views
 urlpatterns = [
      path('register', views.UserRegistration.as_view(), name='register'),
      path('Email_login', views.UserLoginWithEmail.as_view(), name='login'),
+     path('phoneLogin', views.SendMobileOtp.as_view(), name='otp'),
+     
      
 
 ]

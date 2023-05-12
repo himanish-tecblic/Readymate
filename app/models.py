@@ -16,7 +16,6 @@ class UserManager(BaseUserManager):
         user = self.model(email = email,password=password, **extra_fields)
         user.set_password(password)
         user.save(using = self._db)
-        print("----------------------")
         print(user.password)
         return user
     
@@ -45,6 +44,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=14)
     password = models.CharField(max_length=8)
     forgot_password = models.CharField(max_length=8, null=True, blank=True)
+    otp = models.IntegerField(null=True, blank=True)
     last_login = models.DateTimeField(null=True, blank=True)
     last_logout = models.DateTimeField(null=True, blank=True)
     

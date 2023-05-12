@@ -22,3 +22,7 @@ class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
 
+
+
+class PhoneOtpSerializer(serializers.Serializer):
+  phone = serializers.CharField()
