@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 # Create your models here.
@@ -30,7 +31,12 @@ class UserManager(BaseUserManager):
         
             
        return self.create_user(email, password, **extra_fields)
-       
+   
+    def create(self, **kwargs):
+        return self.model.objects.create_user(**kwargs)
+    
+    
+
 
 class User(AbstractUser):
     username = None
@@ -46,3 +52,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
     
     USERNAME_FIELD = 'email'
+
+    def save(self,*args,**kwargs):
+        self.password = make_password(self.password)
+        super(User,self).save(*args,**kwargs)

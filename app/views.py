@@ -47,7 +47,7 @@ class UserRegistration(APIView):
 
             else:
 
-                return Response({
+                 return Response({
                 "message": "Data not found"
             }, status=status.HTTP_400_BAD_REQUEST)
                 
@@ -60,20 +60,18 @@ class UserLoginWithEmail(APIView):
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
             user = User.objects.filter(email=email)
-            username = User.objects.get(email=email).name
-            print("--------------->>>>",username)
             if user:
-                user_validate = authenticate( username=username, password=password)
-                print("-------------->>>>",user_validate)
+                email = User.objects.get(email=email)
+                user_validate = authenticate( username=email, password=password)
                 if user_validate:
                            response={
                                 "success": True,
                                 "message": "User logged in Successfully",
                                 "status": status.HTTP_201_CREATED,
-                                'user_id': user.id,
-                                "user_name": user.name,
-                                "user_phone": str(user.phone),
-                                "user_email": user.email,
+                                # 'user_id': user._id,
+                                "user_name": user_validate.name,
+                                "user_phone": str(user_validate.phone),
+                                "user_email": user_validate.email,
                             }
                            return Response(response, status=status.HTTP_201_CREATED)
             # return Response( status=status.HTTP_400_BAD_REQUEST)
@@ -81,5 +79,5 @@ class UserLoginWithEmail(APIView):
                         'message': "username or password does not match!! please enter correct credentials"
                     }, status=status.HTTP_400_BAD_REQUEST)
                 
-                # lbdkfbsdkfbh
+
                     
