@@ -45,9 +45,8 @@ class UserRegistration(APIView):
                     "message":str(e)
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            else:
-
-                 return Response({
+        else:
+            return Response({
                 "message": "Data not found"
             }, status=status.HTTP_400_BAD_REQUEST)
                 
@@ -68,7 +67,7 @@ class UserLoginWithEmail(APIView):
                                 "success": True,
                                 "message": "User logged in Successfully",
                                 "status": status.HTTP_201_CREATED,
-                                # 'user_id': user._id,
+                                'user_id': user._id,
                                 "user_name": user_validate.name,
                                 "user_phone": str(user_validate.phone),
                                 "user_email": user_validate.email,
@@ -78,6 +77,10 @@ class UserLoginWithEmail(APIView):
                 return Response({
                         'message': "username or password does not match!! please enter correct credentials"
                     }, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({
+                        'message': "User Dose Not Exist"
+                },status=status.HTTP_400_BAD_REQUEST)
                 
 
                     
